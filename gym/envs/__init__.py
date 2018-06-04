@@ -1,8 +1,19 @@
 from gym.envs.registration import registry, register, make, spec
 
+# Custom Environment(s) for Temperature Control
+# ----------------------------------------------------
+# Vacuum Can
+register(
+    id='VacCan-v0',
+    entry_point='gym.envs.temp_ctrl:VacCanEnv',
+    max_episode_steps=200,
+    reward_threshold=200.0,
+)
+         
+         
+
 # Algorithmic
 # ----------------------------------------
-
 register(
     id='Copy-v0',
     entry_point='gym.envs.algorithmic:CopyEnv',
