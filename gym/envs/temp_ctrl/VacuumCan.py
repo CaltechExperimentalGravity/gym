@@ -4,7 +4,7 @@ from gym.utils import seeding
 import numpy as np
 
 
-class VacuumCanEnv(gym.Env):
+class VacCanEnv(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -15,7 +15,8 @@ class VacuumCanEnv(gym.Env):
         self.C = 505
         self.A = 1.3
         self.d = 5.08e-2
-        self.t = 1  # seconds between state updates
+        self.t_step = 1  # seconds between state updates
+        self.t_max = 1000
 
         # Set-point temperature
         self.T_setpoint = 45  # Celsius
@@ -39,8 +40,8 @@ class VacuumCanEnv(gym.Env):
 
 # Physical Model of Vacuum Can temperature
     def vac_can(self, T, t_inst):
-        dTdt = -k*A*(T-self.T__env_buff[np.argmax(t >= t_inst)])/(d*m*C) \
-               + self.H_buff[np.argmax(t >= t_inst)]/(m*C)
+        dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >= t_inst)])/(self.d*self.m*self.C) \
+               + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
         return dTdt
 
 # Simulates reaction
@@ -49,17 +50,18 @@ class VacuumCanEnv(gym.Env):
         T_can = self.state
 
         P_heat = action*20
-        T_amb = 5*np.sin(2*np.pi*t/(6*3600)) + 20  # Ambient temperature oscillating around 20 C with an amplitude of 5 C
+        T_amb = 5*np.sin(2*np.pi*self.t_step/(6*3600)) + 20  # Ambient temperature oscillating around 20 C with an amplitude of 5 C
 
+        self.t = np.arange(0, self.t_max, self.t_step)
+        
         self.T__env_buff = np.interp(t, t, T_amb)
         self.H_buff = np.interp(t, t, P_heat)
-        t = np.arange(0, t_max, deltaT)
 
         T_can_updated = odeint(self.vac_can, T_can, self.t)
 
         self.state = T_can_updated
 
-        done = T < 15 or T > 60
+        done = T_can_updated < 15 or T_can_updated > 60
         done = bool(done)
 
         if not done:
