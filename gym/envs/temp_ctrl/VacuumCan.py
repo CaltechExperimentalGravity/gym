@@ -46,13 +46,15 @@ class VacCanEnv(gym.Env):
         #        t_inst)])/(self.d*self.m*self.C) \
         #       + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
 
-        dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) + self.P_heat/(self.m*self.C)
+        dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) \
+               + self.P_heat/(self.m*self.C)
         return dTdt
 
 # Ambient temperature function/list
     def T_amb(self, time):
-        # returns ambient temperature oscillating around 20 C with an amplitude of 5 C, depending on number of steps elapsed
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. +time)/(6*3600)) + 20.
+        """Returns ambient temperature oscillating around 20 C with an
+           amplitude of 5 C, depending on number of steps elapsed. """
+        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -71,9 +73,12 @@ class VacCanEnv(gym.Env):
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
 
-        T_can_updated = float(odeint(self.vac_can, T_can, self.t)[int(self.t_max/self.t_step) -1]) #gets final value after integration
+        #  gets final value after integration
+        T_can_updated = float(odeint(
+            self.vac_can, T_can, self.t)[int(self.t_max/self.t_step) - 1])
 
-        self.state = np.array([T_can_updated, self.T_amb(self.elapsed_steps*10.)])
+        self.state = np.array([T_can_updated,
+                               self.T_amb(self.elapsed_steps*10.)])
 
         done = T_can_updated < 15 or T_can_updated > 60
         done = bool(done)
@@ -86,10 +91,10 @@ class VacCanEnv(gym.Env):
             reward = 1.0
         else:
             if self.steps_beyond_done == 0:
-                logger.warn("You are calling 'step()' even though this"
-                            "environment has already returned done = True."
-                            "You should always call 'reset()' once you receive"
-                            " 'done = True' -- any further steps are "
+                logger.warn("You are calling 'step()' even though this "
+                            "environment has already returned done = True. "
+                            "You should always call 'reset()' once you "
+                            "receive 'done = True' -- any further steps are "
                             "undefined behavior.")
             self.steps_beyond_done += 1
             reward = 0.0
