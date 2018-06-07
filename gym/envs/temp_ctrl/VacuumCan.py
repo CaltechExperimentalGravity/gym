@@ -17,7 +17,7 @@ class VacCanEnv(gym.Env):
         self.A = 1.3
         self.d = 5.08e-2
         self.t_step = 0.1  # seconds between state updates
-        self.t_max = 10 # 10 seconds = 1 time-step
+        self.t_max = 10  # 10 seconds = 1 time-step
 
         # Set-point temperature
         self.T_setpoint = 45  # Celsius
@@ -35,7 +35,6 @@ class VacCanEnv(gym.Env):
         self.reset()
 
 
-
 # Sets seed for random number generator used in the environment
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -43,35 +42,34 @@ class VacCanEnv(gym.Env):
 
 # Physical Model of Vacuum Can temperature
     def vac_can(self, T, t_inst):
-        # dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >= t_inst)])/(self.d*self.m*self.C) \
+        # dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >=\
+        #        t_inst)])/(self.d*self.m*self.C) \
         #       + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
-               
+
         dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) + self.P_heat/(self.m*self.C)
         return dTdt
-    
+
 # Ambient temperature function/list
     def T_amb(self, time):
         # returns ambient temperature oscillating around 20 C with an amplitude of 5 C, depending on number of steps elapsed
         return 5*np.sin(2*np.pi*(self.elapsed_steps*10. +time)/(6*3600)) + 20.
-    
-    
+
+
 # Simulates reaction
     def step(self, action):
-        assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
-        
-        
+        assert self.action_space.contains(action), \
+                "%r (%s) invalid" % (action, type(action))
 
         self.elapsed_steps += 1
-        
+
         T_can = self.state[0]
 
         self.P_heat = action*20
 
-
         self.t = np.arange(0, self.t_max, self.t_step)
-        
-        #self.T__env_buff = np.interp(self.t, self.t, T_amb)
-        #self.H_buff = np.interp(self.t, self.t, P_heat)
+
+        #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
+        #  self.H_buff = np.interp(self.t, self.t, P_heat)
 
         T_can_updated = float(odeint(self.vac_can, T_can, self.t)[int(self.t_max/self.t_step) -1]) #gets final value after integration
 
@@ -80,7 +78,6 @@ class VacCanEnv(gym.Env):
         done = T_can_updated < 15 or T_can_updated > 60
         done = bool(done)
 
-        
         if not done:
             reward = 1.0
         elif self.steps_beyond_done is None:
