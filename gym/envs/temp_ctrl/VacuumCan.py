@@ -2,6 +2,7 @@ import gym
 from gym import spaces, logger
 from gym.utils import seeding
 import numpy as np
+from scipy.integrate import odeint
 
 
 class VacCanEnv(gym.Env):
@@ -15,8 +16,8 @@ class VacCanEnv(gym.Env):
         self.C = 505
         self.A = 1.3
         self.d = 5.08e-2
-        self.t_step = 1  # seconds between state updates
-        self.t_max = 1000
+        self.t_step = 0.1  # seconds between state updates
+        self.t_max = 1
 
         # Set-point temperature
         self.T_setpoint = 45  # Celsius
@@ -25,11 +26,11 @@ class VacCanEnv(gym.Env):
         self.T_threshold = 60
 
         self.action_space = spaces.Discrete(20)
-        self.observation_space = spaces.Box(45-30, 45+30)
+        self.observation_space = spaces.Box(np.array([15.0]), np.array([75.0]))
 
         self.seed()
-        self.state = None
-
+        # self.state = None
+        self.reset()
         self.steps_beyond_done = None
 
 
@@ -40,28 +41,31 @@ class VacCanEnv(gym.Env):
 
 # Physical Model of Vacuum Can temperature
     def vac_can(self, T, t_inst):
-        dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >= t_inst)])/(self.d*self.m*self.C) \
-               + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
+        # dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >= t_inst)])/(self.d*self.m*self.C) \
+        #       + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
+               
+        dTdt = -self.k*self.A*(T-self.T_amb)/(self.d*self.m*self.C) + self.P_heat/(self.m*self.C)
         return dTdt
+
 
 # Simulates reaction
     def step(self, action):
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
         T_can = self.state
 
-        P_heat = action*20
-        T_amb = 5*np.sin(2*np.pi*self.t_step/(6*3600)) + 20  # Ambient temperature oscillating around 20 C with an amplitude of 5 C
+        self.P_heat = action*20
+        self.T_amb = 5*np.sin(2*np.pi*self.t_step/(6*3600)) + 20  # Ambient temperature oscillating around 20 C with an amplitude of 5 C
 
         self.t = np.arange(0, self.t_max, self.t_step)
         
-        self.T__env_buff = np.interp(t, t, T_amb)
-        self.H_buff = np.interp(t, t, P_heat)
+        #self.T__env_buff = np.interp(self.t, self.t, T_amb)
+        #self.H_buff = np.interp(self.t, self.t, P_heat)
 
-        T_can_updated = odeint(self.vac_can, T_can, self.t)
+        T_can_updated = odeint(self.vac_can, T_can[0], self.t)[int(self.t_max/self.t_step) -1]
 
         self.state = T_can_updated
 
-        done = T_can_updated < 15 or T_can_updated > 60
+        done = T_can_updated[0] < 15 or T_can_updated[0] > 60
         done = bool(done)
 
         if not done:
@@ -83,6 +87,6 @@ class VacCanEnv(gym.Env):
         return self.state, reward, done, {}
 
     def reset(self):
-        self.state = self.np_random.uniform(low=15, high=30)
+        self.state = np.array([self.np_random.uniform(low=15, high=30)])
         self.steps_beyond_done = None
         return np.array(self.state)
