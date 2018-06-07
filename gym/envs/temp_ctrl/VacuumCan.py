@@ -47,7 +47,8 @@ class VacCanEnv(gym.Env):
         #        t_inst)])/(self.d*self.m*self.C) \
         #       + self.H_buff[np.argmax(self.t>= t_inst)]/(self.m*self.C)
 
-        dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) + self.P_heat/(self.m*self.C)
+        dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) \
+               + self.P_heat/(self.m*self.C)
         return dTdt
 
 # Ambient temperature function/list
