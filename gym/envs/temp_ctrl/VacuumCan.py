@@ -17,7 +17,7 @@ class VacCanEnv(gym.Env):
         self.A = 1.3
         self.d = 5.08e-2
         self.t_step = 0.1  # seconds between state updates
-        self.t_max = 1
+        self.t_max = 10*10 # 10 seconds = 1 time-step
 
         # Set-point temperature
         self.T_setpoint = 45  # Celsius
@@ -26,7 +26,7 @@ class VacCanEnv(gym.Env):
         self.T_threshold = 60
 
         self.action_space = spaces.Discrete(20)
-        self.observation_space = spaces.Box(np.array([15.0]), np.array([75.0]))
+        self.observation_space = spaces.Box(np.array([15.0]), np.array([60.0]))
 
         self.seed()
         # self.state = None
