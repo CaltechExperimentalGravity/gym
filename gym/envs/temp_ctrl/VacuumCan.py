@@ -5,6 +5,7 @@ import numpy as np
 from scipy.integrate import odeint
 
 
+
 class VacCanEnv(gym.Env):
     metadata = {
         'render.modes':['human']
