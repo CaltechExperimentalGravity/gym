@@ -1,5 +1,6 @@
 import gym
-from gym import spaces, logger
+from gym import logger
+import gym.spaces as spaces
 from gym.utils import seeding
 import numpy as np
 from scipy.integrate import odeint
