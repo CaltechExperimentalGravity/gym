@@ -27,7 +27,9 @@ class VacCanEnv(gym.Env):
         self.T_threshold = 60
 
         self.action_space = spaces.Discrete(20)
-        self.observation_space = spaces.Box(np.array([15.0, 0.0]), np.array([60.0, 50.0]), dtype=np.float64)
+        self.observation_space = spaces.Box(np.array([15.0, 0.0]),
+                                            np.array([60.0, 50.0]),
+                                            dtype=np.float64)
 
         self.seed()
         # self.state = None
