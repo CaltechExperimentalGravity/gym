@@ -1,10 +1,11 @@
 # Test Environments for Thermal control
 
-* `VanCan` env
+Contains the python code to create simulations of the physical system as a gym environment on which RL algorithms can be trained and tested
 
-## Re-install only required Environments
+## Available Envs
+* `VacCan` env : simulation of thermal dynamics of the vacuum can considering the conduction through the foam and heating.
 
-* Basic Vacuum Can thermal dynamics:
+This environment can be installed using:
 
 ```
 pip install -e .['VacCan-v0']
