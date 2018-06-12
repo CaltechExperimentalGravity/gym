@@ -7,8 +7,8 @@ import numpy as np
 from time import sleep
 
 # Channel access
-from ezca import Ezca
-
+# from ezca import Ezca
+from epics import caget, caput
 
 class EPICSInterfaceEnv(gym.Env):
     ''' This environment interfaces real world slow EPICS channels into the
@@ -37,7 +37,7 @@ class EPICSInterfaceEnv(gym.Env):
     }
 
     def __init__(self):
-        RCPID = Ezca(ifo=None, logger=False)  # ezca python access to EPICS
+        # RCPID = Ezca(ifo=None, logger=False)  # ezca python access to EPICS
         self.d = 5.08e-2
         self.t_step = 0.1  # seconds between state updates
         self.t_max = 10  # 10 seconds = 1 time-step
@@ -80,7 +80,8 @@ class EPICSInterfaceEnv(gym.Env):
 
         self.elapsed_steps += 1
         ProcessChan = "C3:PSL-SCAV_TRANS_DC"
-        ProcessVal = RCPID.read(ProcessChan)
+        # ProcessVal = RCPID.read(ProcessChan)
+        ProcessVal = caget(ProcessChan)
 
         self.P_heat = action
 
