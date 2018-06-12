@@ -7,8 +7,8 @@ import numpy as np
 from time import sleep
 
 # Channel access
-# from ezca import Ezca
 from epics import caget, caput
+
 
 class EPICSInterfaceEnv(gym.Env):
     ''' This environment interfaces real world slow EPICS channels into the
@@ -33,7 +33,7 @@ class EPICSInterfaceEnv(gym.Env):
         '''
 
     metadata = {
-        'render.modes':['human']
+        'render.modes': ['human']
     }
 
     def __init__(self):
