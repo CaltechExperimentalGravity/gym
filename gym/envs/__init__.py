@@ -17,8 +17,18 @@ register(
          max_episode_steps=500,
          reward_threshold=500.0,
          )
-         
-'''         
+
+'''
+
+# Custom Environment(s) for EPICS Control
+# ----------------------------------------------------
+# FSS Locker interface
+register(
+    id='EPICSInterface-v0',
+    entry_point='gym.envs.epics_slow_control:EPICSInterfaceEnv',
+    max_episode_steps=500,
+    reward_threshold=500.0,
+)
 
 # Algorithmic
 # ----------------------------------------
@@ -549,4 +559,3 @@ register(
     entry_point='gym.envs.unittest:MemorizeDigits',
     reward_threshold=20,
     )
-
