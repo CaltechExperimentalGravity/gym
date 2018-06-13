@@ -52,7 +52,7 @@ class EPICSInterfaceEnv(gym.Env):
 
         # Observation chan one win case threshold
         self.TransLockThresh = 2.0
-        self.RelfLockThresh = 0.8
+        self.RelfLockThresh = 1.7
         self.FSSFastBounds = np.array[0.8, 1.2]
 
         # Establish action space
@@ -92,7 +92,7 @@ class EPICSInterfaceEnv(gym.Env):
             up/down/left alone.  Its not clear yet if this will be easy to seed
             a starting point that will be able to find a good strategy.
             '''
-# # TODO: add rate limit in case flicking PZT quickly might damage it
+        # # TODO: add rate limit in case flicking PZT quickly might damage it
         if action < 3:
             actuator_value = actuator_value + 0.0001 * (action - 1)
             caput(self.actuator, actuator_value)
@@ -102,11 +102,13 @@ class EPICSInterfaceEnv(gym.Env):
             caput(self.actuator, actuator_value)
             caput(self.loopStateEnable, 1)
 
-        self.state = ProcessVal
+        self.state = (monitor1_value, monitor1_value, monitor1_value)
         sleep(self.t_step)  # rate limit channel access
-        done = ProcessVal < 1.7
+        done = actuator_value < self.ActuatorBounds[0] or \
+            actuator_value > self.ActuatorBounds[1]
         done = bool(done)
 
+        # reward schedule
         if not done:
             if self.state[0] > 1.5 or self.state[0] < 4.0:
                 reward = 1.0
