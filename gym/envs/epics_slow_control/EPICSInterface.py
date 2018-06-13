@@ -102,7 +102,7 @@ class EPICSInterfaceEnv(gym.Env):
             caput(self.actuator, actuator_value)
             caput(self.loopStateEnable, 1)
 
-        self.state = (monitor1_value, monitor1_value, monitor1_value)
+        self.state = (monitor1_value, monitor2_value, monitor3_value)
         sleep(self.t_step)  # rate limit channel access
         # TODO: This is a dumb end condition if bound can be set by obser space
         done = actuator_value < self.ActuatorBounds[0] or \
