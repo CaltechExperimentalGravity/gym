@@ -38,8 +38,8 @@ class EPICSInterfaceEnv(gym.Env):
     def __init__(self):
         self.t_step = 0.1  # seconds between state updates
 
-        self.monitor1 = "C3:PSL-SCAV_TRANS_DC"
-        self.monitor2 = "C3:PSL-SCAV_REFL_DC"
+        self.monitor1 = "C3:PSL-SCAV_REFL_DC"
+        self.monitor2 = "C3:PSL-SCAV_TRANS_DC"
         self.monitor3 = "C3:PSL-SCAV_FSS_FASTMON"
         self.loopStateEnable = "C3:PSL-SCAV_FSS_RAMP_EN"
         self.actuator = "C3:PSL-SCAV_FSS_SLOWOUT"
@@ -104,17 +104,21 @@ class EPICSInterfaceEnv(gym.Env):
 
         self.state = (monitor1_value, monitor1_value, monitor1_value)
         sleep(self.t_step)  # rate limit channel access
+        # TODO: This is a dumb end condition if bound can be set by obser space
         done = actuator_value < self.ActuatorBounds[0] or \
             actuator_value > self.ActuatorBounds[1]
         done = bool(done)
 
         # reward schedule
         if not done:
-            if self.state[0] > 1.5 or self.state[0] < 4.0:
-                reward = 1.0
+            if self.state[0] < 1.5:
+                width = 0.5
+                # mountain/triangle shapped reward function
+                reward = 1.0 + np.clip(
+                    1 - 2 / width * np.abs(self.state[2] - self.setpoint), 0, 1)
         elif self.steps_beyond_done is None:
             self.steps_beyond_done = 0
-            reward = 1.0
+            reward = 0.0
         else:
             if self.steps_beyond_done == 0:
                 logger.warn("You are calling 'step()' even though this "
