@@ -133,6 +133,9 @@ class EPICSInterfaceEnv(gym.Env):
 
     def reset(self):
         # self.state = [self.np_random.uniform(low=15, high=30), self.T_amb(0)]
-        self.state = 1.0  # dummy state to start
+        resetChannVal = self.np_random.uniform(low=3.1, high=3.8, size=(1,))
+        caput(self.loopStateEnable, 0)
+        caput(self.actuator, resetChannVal)
+        #  self.state = 1.0  # dummy state to start
         self.steps_beyond_done = None
         return np.array(self.state)
