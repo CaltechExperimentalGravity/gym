@@ -3,7 +3,6 @@ from gym import logger
 import gym.spaces as spaces
 from gym.utils import seeding
 import numpy as np
-# from scipy.integrate import odeint
 from time import sleep
 
 # Channel access
@@ -37,31 +36,33 @@ class EPICSInterfaceEnv(gym.Env):
     }
 
     def __init__(self):
-        # RCPID = Ezca(ifo=None, logger=False)  # ezca python access to EPICS
-        self.d = 5.08e-2
         self.t_step = 0.1  # seconds between state updates
-        self.t_max = 10  # 10 seconds = 1 time-step
+
+        self.monitor1 = "C3:PSL-SCAV_TRANS_DC"
+        self.monitor2 = "C3:PSL-SCAV_REFL_DC"
+        self.monitor3 = "C3:PSL-SCAV_FSS_FASTMON"
+        self.loopStateEnable = "C3:PSL-SCAV_FSS_RAMP_EN"
+        self.actuator = "C3:PSL-SCAV_FSS_SLOWOUT"
 
         # Set-point of process
-        self.T_setpoint = 1.0  # volts
+        self.setpoint = 1.0  # volts
 
         # Set bounds on search range hit the edge and you fail episode
-        self.ActuatorUB = 3.8
-        self.ActuatorLB = 3.1
+        self.ActuatorBounds = np.array[3.1, 3.8]
 
         # Observation chan one win case threshold
         self.TransLockThresh = 2.0
         self.RelfLockThresh = 0.8
-        self.FSSFastUB = 1.2
-        self.FSSFastLB = 0.8
+        self.FSSFastBounds = np.array[0.8, 1.2]
 
         # Establish action space
         self.action_space = spaces.Discrete(6)
-        self.observation_space = spaces.Box(np.array([15.0, 0.0]),
-                                            np.array([60.0, 50.0]),
-                                            dtype=np.float64)
+        self.observation_space = spaces.Box(np.array([0.0, 5.0]),
+                                            np.array([-17.0, 17.0]),
+                                            dtype=np.float32)  # EPICS lim 4sf
+# TODO: seed might not be needed
         self.seed()
-        # self.state = None
+        self.state = None
         self.steps_beyond_done = None
         self.elapsed_steps = 0
         self.reset()
@@ -79,17 +80,31 @@ class EPICSInterfaceEnv(gym.Env):
                 "%r (%s) invalid" % (action, type(action))
 
         self.elapsed_steps += 1
-        ProcessChan = "C3:PSL-SCAV_TRANS_DC"
-        # ProcessVal = RCPID.read(ProcessChan)
-        ProcessVal = caget(ProcessChan)
 
-        self.P_heat = action
+        monitor1_value = caget(self.monitor1)
+        monitor2_value = caget(self.monitor2)
+        monitor3_value = caget(self.monitor3)
+        actuator_value = caget(self.actuator)
 
-        #  gets final value after integration
+        # action tree
+        ''' Here action is split into 2x3 options. Engage switch is either on
+            off, and the slow laser control voltage is either nudged
+            up/down/left alone.  Its not clear yet if this will be easy to seed
+            a starting point that will be able to find a good strategy.
+            '''
+# # TODO: add rate limit in case flicking PZT quickly might damage it
+        if action < 3:
+            actuator_value = actuator_value + 0.0001 * (action - 1)
+            caput(self.actuator, actuator_value)
+            caput(self.loopStateEnable, 0)
+        elif action >= 3:
+            actuator_value = actuator_value + 0.0001 * (action - 4)
+            caput(self.actuator, actuator_value)
+            caput(self.loopStateEnable, 1)
 
         self.state = ProcessVal
-        sleep(2)
-        done = ProcessVal > 1.5
+        sleep(self.t_step)  # rate limit channel access
+        done = ProcessVal < 1.7
         done = bool(done)
 
         if not done:
