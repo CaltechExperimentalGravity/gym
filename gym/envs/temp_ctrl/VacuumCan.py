@@ -83,16 +83,16 @@ class VacCanEnv(gym.Env):
         self.state = np.array([T_can_updated,
                                self.T_amb(self.elapsed_steps*10.)])
 
-        done = T_can_updated < 15 or T_can_updated > 60
+        done = T_can_updated < 15. or T_can_updated > 60.
         done = bool(done)
 
         if not done:
-            if self.state[0] > 40 or self.state[0] < 50:
-                reward = 1.0
+            if self.state[0] > 40. or self.state[0] < 50.:
+                reward = 0.1
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
-            reward = 1.0
+            reward = 0.0
         else:
             if self.steps_beyond_done == 0:
                 logger.warn("You are calling 'step()' even though this "
