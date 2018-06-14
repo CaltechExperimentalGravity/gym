@@ -87,7 +87,7 @@ class VacCanEnv(gym.Env):
         done = bool(done)
 
         if not done:
-            if self.state[0] > 40. or self.state[0] < 50.:
+            if self.state[0] > 40. and self.state[0] < 50.:
                 reward = 0.1
         elif self.steps_beyond_done is None:
 

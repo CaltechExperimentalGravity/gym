@@ -1,11 +1,12 @@
 import gym
-from gym import spaces, logger
+from gym import logger
+import gym.spaces as spaces
 from gym.utils import seeding
 import numpy as np
 from scipy.integrate import odeint
 
 
-class VacCanEnv(gym.Env):
+class VacCanTestEnv(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -26,7 +27,9 @@ class VacCanEnv(gym.Env):
         self.T_threshold = 60
 
         self.action_space = spaces.Discrete(20)
-        self.observation_space = spaces.Box(np.array([15.0]), np.array([60.0]))
+        self.observation_space = spaces.Box(np.array([15.0, 0.0]),
+                                            np.array([60.0, 50.0]),
+                                            dtype=np.float64)
 
         self.seed()
         # self.state = None
@@ -80,16 +83,18 @@ class VacCanEnv(gym.Env):
         self.state = np.array([T_can_updated,
                                self.T_amb(self.elapsed_steps*10.)])
 
-        done = T_can_updated < 15 or T_can_updated > 60
+        done = T_can_updated < 15. or T_can_updated > 60. or self.elapsed_steps == 100
         done = bool(done)
 
         if not done:
-            if self.state[0] > 40 or self.state[0] < 50:
-                reward = 1.0
+            if self.state[0] > 43. and self.state[0] < 47.:
+                reward = 1
+            else:
+                reward = 0
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
-            reward = 1.0
+            reward = 0.0
         else:
             if self.steps_beyond_done == 0:
                 logger.warn("You are calling 'step()' even though this "
@@ -103,6 +108,6 @@ class VacCanEnv(gym.Env):
         return self.state, reward, done, {}
 
     def reset(self):
-        self.state = [self.np_random.uniform(low=15, high=30), self.T_amb(0)]
+        self.state = [self.np_random.uniform(low=15, high=60), self.T_amb(0)]
         self.steps_beyond_done = None
         return np.array(self.state)

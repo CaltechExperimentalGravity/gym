@@ -10,7 +10,7 @@ register(
     reward_threshold=500.0,
 )
 
-'''
+
 register(
          id='VacCanTest-v0',
          entry_point='gym.envs.temp_ctrl:VacCanTestEnv',
@@ -18,7 +18,6 @@ register(
          reward_threshold=500.0,
          )
          
-'''         
 
 # Algorithmic
 # ----------------------------------------
