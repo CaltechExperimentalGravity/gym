@@ -87,10 +87,12 @@ class VacCanEnv(gym.Env):
         done = bool(done)
 
 # TODO: Fix this logic to handle case not done but out of range
-        reward = 0.0  # hack to handle case not done and out of reward range
+        # reward = 0.0  # hack to handle case not done and out of reward range
         if not done:
             if self.state[0] > 40. and self.state[0] < 50.:
                 reward = 0.1
+            else:
+                reward = 0.
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
