@@ -26,7 +26,7 @@ class VacCanEnv(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Discrete(20)
+        self.action_space = spaces.Discrete(35)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
