@@ -86,6 +86,8 @@ class VacCanEnv(gym.Env):
         done = T_can_updated < 15. or T_can_updated > 60.
         done = bool(done)
 
+# TODO: Fix this logic to handle case not done but out of range
+        reward = 0.0  # hack to handle case not done and out of reward range
         if not done:
             if self.state[0] > 40. and self.state[0] < 50.:
                 reward = 0.1
