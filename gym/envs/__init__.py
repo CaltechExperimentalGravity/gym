@@ -6,8 +6,8 @@ from gym.envs.registration import registry, register, make, spec
 register(
     id='VacCan-v0',
     entry_point='gym.envs.temp_ctrl:VacCanEnv',
-    max_episode_steps=500,
-    reward_threshold=500.0,
+    max_episode_steps=10000,
+    reward_threshold=10000.0,
 )
 
 
@@ -17,7 +17,7 @@ register(
          max_episode_steps=500,
          reward_threshold=500.0,
          )
-         
+
 
 # Algorithmic
 # ----------------------------------------
@@ -548,4 +548,3 @@ register(
     entry_point='gym.envs.unittest:MemorizeDigits',
     reward_threshold=20,
     )
-
