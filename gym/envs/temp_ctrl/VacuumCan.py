@@ -26,7 +26,7 @@ class VacCanEnv(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Discrete(20)
+        self.action_space = spaces.Discrete(40)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -85,10 +85,15 @@ class VacCanEnv(gym.Env):
 
         done = T_can_updated < 15. or T_can_updated > 60.
         done = bool(done)
-
+        reward = 0.0
         if not done:
+<<<<<<< Updated upstream
             if self.state[0] > 40. and self.state[0] < 50.:
                 reward = 0.1
+=======
+            if self.state[0] > 44 and self.state[0] < 46:
+                reward = 1.0
+>>>>>>> Stashed changes
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
