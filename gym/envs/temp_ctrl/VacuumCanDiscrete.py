@@ -428,7 +428,7 @@ class VacCanEnv3(gym.Env):
 # TODO: Fix this logic to handle case not done but out of range
         # reward = 0.0  # hack to handle case not done and out of reward range
         if not done:
-            reward = 1. - (self.T_can_updated - self.T_setpoint)**2/self.T_setpoint**2
+            reward = 1. - (T_can_updated - self.T_setpoint)**2/self.T_setpoint**2
 
         elif self.steps_beyond_done is None:
 
