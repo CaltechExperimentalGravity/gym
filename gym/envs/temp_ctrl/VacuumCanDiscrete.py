@@ -60,7 +60,7 @@ class VacCanEnv0(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -74,7 +74,7 @@ class VacCanEnv0(gym.Env):
 
         self.P_heat = action
 
-        self.t = np.arange(0, self.t_max, self.t_step)
+        self.t = np.arange(0, self.t_max, self.t_step) + self.elapsed_steps*10.
 
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
@@ -131,7 +131,7 @@ class VacCanEnv1(gym.Env):
         self.C = 505
         self.A = 1.3
         self.d = 5.08e-2
-        self.t_step = 0.1  # seconds between state updates
+        self.t_step = 1.  # seconds between state updates
         self.t_max = 10  # 10 seconds = 1 time-step
 
         # Set-point temperature
@@ -171,7 +171,7 @@ class VacCanEnv1(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -185,7 +185,7 @@ class VacCanEnv1(gym.Env):
 
         self.P_heat = action
 
-        self.t = np.arange(0, self.t_max, self.t_step)
+        self.t = np.arange(0, self.t_max, self.t_step) + self.elapsed_steps*10.
 
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
@@ -281,7 +281,7 @@ class VacCanEnv2(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -295,7 +295,7 @@ class VacCanEnv2(gym.Env):
 
         self.P_heat = action
 
-        self.t = np.arange(0, self.t_max, self.t_step)
+        self.t = np.arange(0, self.t_max, self.t_step) + self.elapsed_steps*10.
 
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
@@ -396,7 +396,7 @@ class VacCanEnv3(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -410,7 +410,7 @@ class VacCanEnv3(gym.Env):
 
         self.P_heat = action
 
-        self.t = np.arange(0, self.t_max, self.t_step)
+        self.t = np.arange(0, self.t_max, self.t_step) + self.elapsed_steps*10.
 
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
@@ -428,7 +428,7 @@ class VacCanEnv3(gym.Env):
 # TODO: Fix this logic to handle case not done but out of range
         # reward = 0.0  # hack to handle case not done and out of reward range
         if not done:
-            reward = 1. - (T_can_updated - self.T_setpoint)**2/self.T_setpoint**2
+            reward = 0.1*(1. - (T_can_updated - self.T_setpoint)**2/self.T_setpoint**2)
 
         elif self.steps_beyond_done is None:
 
@@ -506,7 +506,7 @@ class VacCanEnv4(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(time)/(6*3600)) + 20.
 
 
 # Simulates reaction
@@ -520,7 +520,7 @@ class VacCanEnv4(gym.Env):
 
         self.P_heat = action
 
-        self.t = np.arange(0, self.t_max, self.t_step)
+        self.t = np.arange(0, self.t_max, self.t_step) + self.elapsed_steps*10.
 
         #  self.T__env_buff = np.interp(self.t, self.t, T_amb)
         #  self.H_buff = np.interp(self.t, self.t, P_heat)
@@ -536,7 +536,7 @@ class VacCanEnv4(gym.Env):
         done = bool(done)
 
         if not done:
-            reward = np.exp(-(T_can_updated-self.T_setpoint)**2/(2*self.T_setpoint))
+            reward = 0.1*np.exp(-(T_can_updated-self.T_setpoint)**2/(2*5))
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
