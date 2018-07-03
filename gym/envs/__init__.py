@@ -38,12 +38,42 @@ register(
          reward_threshold=10000.0,
          )
 
+# Vacuum Can
 register(
-         id='VacCan-v5',
-         entry_point='gym.envs.temp_ctrl:VacCanEnv5',
+         id='VacCanC-v0',
+         entry_point='gym.envs.temp_ctrl:VacCanEnvC0',
+         max_episode_steps=10000,
+         reward_threshold=10000.0,
+)
+
+register(
+         id='VacCanC-v1',
+         entry_point='gym.envs.temp_ctrl:VacCanEnvC1',
          max_episode_steps=10000,
          reward_threshold=10000.0,
          )
+
+register(
+         id='VacCanC-v2',
+         entry_point='gym.envs.temp_ctrl:VacCanEnvC2',
+         max_episode_steps=10000,
+         reward_threshold=10000.0,
+         )
+
+register(
+         id='VacCanC-v3',
+         entry_point='gym.envs.temp_ctrl:VacCanEnvC3',
+         max_episode_steps=10000,
+         reward_threshold=10000.0,
+         )
+
+register(
+         id='VacCanC-v4',
+         entry_point='gym.envs.temp_ctrl:VacCanEnvC4',
+         max_episode_steps=10000,
+         reward_threshold=10000.0,
+         )
+
 
 register(
          id='VacCanTest-v0',

@@ -9,7 +9,7 @@ from scipy.integrate import odeint
 #####################################################
 ################## Vac Can 0 ########################
 #####################################################
-class VacCanEnv0(gym.Env):
+class VacCanEnvC0(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -29,7 +29,7 @@ class VacCanEnv0(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(low=0., high=35., shape=(1,))
+        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -120,7 +120,7 @@ class VacCanEnv0(gym.Env):
 #####################################################
 ################## Vac Can 1 ########################
 #####################################################
-class VacCanEnv1(gym.Env):
+class VacCanEnvC1(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -140,7 +140,7 @@ class VacCanEnv1(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(low=0., high=35., shape=(1,))
+        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -230,7 +230,7 @@ class VacCanEnv1(gym.Env):
 ################## Vac Can 2 ########################
 #####################################################
 
-class VacCanEnv2(gym.Env):
+class VacCanEnvC2(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -250,7 +250,7 @@ class VacCanEnv2(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(low=0., high=35., shape=(1,))
+        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -345,7 +345,7 @@ class VacCanEnv2(gym.Env):
 ################## Vac Can 3 ########################
 #####################################################
 
-class VacCanEnv3(gym.Env):
+class VacCanEnvC3(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -365,7 +365,7 @@ class VacCanEnv3(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(low=0., high=35., shape=(1,))
+        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -455,7 +455,7 @@ class VacCanEnv3(gym.Env):
 ################## Vac Can 4 ########################
 #####################################################
 
-class VacCanEnv4(gym.Env):
+class VacCanEnvC4(gym.Env):
     metadata = {
         'render.modes':['human']
     }
@@ -475,7 +475,7 @@ class VacCanEnv4(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(low=0., high=35., shape=(1,))
+        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
