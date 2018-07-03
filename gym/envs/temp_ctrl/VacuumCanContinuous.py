@@ -169,9 +169,8 @@ class VacCanEnvC1(gym.Env):
 
 # Ambient temperature function/list
     def T_amb(self, time):
-        """Returns ambient temperature oscillating around 20 C with an
-           amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        """Returns ambient temperature as a uniformly random value between 15 and 19 C and 21 C """
+        return np.random.random()*1. + 20.
 
 
 # Simulates reaction
