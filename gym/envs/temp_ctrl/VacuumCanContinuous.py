@@ -15,7 +15,7 @@ class VacCanEnvC0(gym.Env):
     }
 
     def __init__(self):
-        self.k = 1.136*25e-3
+        self.k = 1.136*25e-3   # comments go here !
         self.m = 15.76
         self.C = 505
         self.A = 1.3
@@ -27,7 +27,7 @@ class VacCanEnvC0(gym.Env):
         self.T_setpoint = 45  # Celsius
 
         # Temperature at which to fail the episode
-        self.T_threshold = 60
+        self.T_threshold = 90
 
         self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
@@ -60,7 +60,7 @@ class VacCanEnvC0(gym.Env):
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        return 5*np.sin(2*np.pi*(self.elapsed_steps*10.)/(24*3600)) + 20.
 
 
 # Simulates reaction
