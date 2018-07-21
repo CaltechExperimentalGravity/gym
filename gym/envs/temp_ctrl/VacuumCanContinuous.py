@@ -20,8 +20,8 @@ class VacCanEnvC0(gym.Env):
         self.C = 505
         self.A = 1.3
         self.d = 5.08e-2
-        self.t_step = 0.1  # seconds between state updates
-        self.t_max = 10  # 10 seconds = 1 time-step
+        self.t_step = 0.1      # seconds between state updates
+        self.t_max = 10        # 10 seconds = 1 time-step
 
         # Set-point temperature
         self.T_setpoint = 45  # Celsius
@@ -29,7 +29,8 @@ class VacCanEnvC0(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 90
 
-        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
+        self.action_space = spaces.Box(np.array([0.]),
+                                       np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -63,7 +64,7 @@ class VacCanEnvC0(gym.Env):
         return 5*np.sin(2*np.pi*(self.elapsed_steps*10.)/(24*3600)) + 20.
 
 
-# Simulates reaction
+    # Simulates reaction
     def step(self, action):
         assert self.action_space.contains(action), \
                 "%r (%s) invalid" % (action, type(action))
@@ -200,10 +201,8 @@ class VacCanEnvC1(gym.Env):
         done = bool(done)
 
         if not done:
-            if self.state[0] > 43. and self.state[0] < 47.:
-                reward = 0.1
-            else:
-                reward = 0.
+            reward = 1/(0.1 + (self.state[0] - self.T_setpoint)**2)
+
         elif self.steps_beyond_done is None:
 
             self.steps_beyond_done = 0
@@ -364,7 +363,8 @@ class VacCanEnvC3(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
+        self.action_space = spaces.Box(np.array([0.]),
+                                    np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -376,12 +376,12 @@ class VacCanEnvC3(gym.Env):
         self.reset()
 
 
-# Sets seed for random number generator used in the environment
+    # Sets seed for random number generator used in the environment
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-# Physical Model of Vacuum Can temperature
+    # Physical Model of Vacuum Can temperature
     def vac_can(self, T, t_inst):
         # dTdt = -self.k*self.A*(T-self.T__env_buff[np.argmax(self.t >=\
         #        t_inst)])/(self.d*self.m*self.C) \
@@ -391,14 +391,14 @@ class VacCanEnvC3(gym.Env):
                + self.P_heat/(self.m*self.C)
         return dTdt
 
-# Ambient temperature function/list
+    # Ambient temperature function/list
     def T_amb(self, time):
         """Returns ambient temperature oscillating around 20 C with an
            amplitude of 5 C, depending on number of steps elapsed. """
         return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
 
 
-# Simulates reaction
+    # Simulates reaction
     def step(self, action):
         assert self.action_space.contains(action), \
                 "%r (%s) invalid" % (action, type(action))
@@ -424,7 +424,7 @@ class VacCanEnvC3(gym.Env):
         done = T_can_updated < 15. or T_can_updated > 60.
         done = bool(done)
 
-# TODO: Fix this logic to handle case not done but out of range
+        # TODO: Fix this logic to handle case not done but out of range
         # reward = 0.0  # hack to handle case not done and out of reward range
         if not done:
             reward = 1. - (self.T_can_updated - self.T_setpoint)**2/self.T_setpoint**2
@@ -474,7 +474,8 @@ class VacCanEnvC4(gym.Env):
         # Temperature at which to fail the episode
         self.T_threshold = 60
 
-        self.action_space = spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
+        self.action_space = spaces.Box(np.array([0.]),
+                                        np.array([100.]), dtype=np.float64)
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
