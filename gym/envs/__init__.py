@@ -2,83 +2,76 @@ from gym.envs.registration import registry, register, make, spec
 
 # Custom Environment(s) for Temperature Control
 # ----------------------------------------------------
+
+"""param = ['Vaccan', 'Seism']
+act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
+reward_type = ['Rw10', 'Rw4', 'Rquad', 'Rexp']
+ambtemp_models = ['Tcon', 'Tsin', 'Trand', 'Tsinrand']
+timestep_size = ['t1', 't10', 't30', 't60', 't100']
+
+
+for p in param:
+    for a in act_space:
+        for r in reward_type:
+            for ta in ambtemp_models:
+                for ts in timestep_size:
+                    register(
+                        id='{}_{}_{}_{}_{}-v0'.format(p,a,r,ta,ts),
+                        entry_point='gym.envs.temp_ctrl:TempCtrlEnvs'
+                        #entry_point='gym.envs.temp_ctrl:TempCtrlEnvs(param={}, act_space={}, reward_type={} ambtemp_models={}, timestep_size={})'.format(p,a,r,ta,ts),
+                    )"""
+# Custom Environment(s) for Temperature Control
+# ----------------------------------------------------
 # Vacuum Can
 register(
     id='VacCan-v0',
     entry_point='gym.envs.temp_ctrl:VacCanEnv0',
-    max_episode_steps=10000,
-    reward_threshold=10000.0,
+
 )
 
 register(
          id='VacCan-v1',
          entry_point='gym.envs.temp_ctrl:VacCanEnv1',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
+
          )
 
 register(
          id='VacCan-v2',
          entry_point='gym.envs.temp_ctrl:VacCanEnv2',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
+
          )
 
 register(
          id='VacCan-v3',
          entry_point='gym.envs.temp_ctrl:VacCanEnv3',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
+
          )
 
 register(
          id='VacCan-v4',
          entry_point='gym.envs.temp_ctrl:VacCanEnv4',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
+
          )
 
 # Vacuum Can
 register(
          id='VacCanC-v0',
          entry_point='gym.envs.temp_ctrl:VacCanEnvC0',
-         reward_threshold=10000.0,
+
 )
 
 register(
          id='VacCanC-v1',
          entry_point='gym.envs.temp_ctrl:VacCanEnvC1',
-         reward_threshold=10000.0,
+
          )
 
 register(
          id='VacCanC-v2',
          entry_point='gym.envs.temp_ctrl:VacCanEnvC2',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
+
          )
 
-register(
-         id='VacCanC-v3',
-         entry_point='gym.envs.temp_ctrl:VacCanEnvC3',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
-         )
-
-register(
-         id='VacCanC-v4',
-         entry_point='gym.envs.temp_ctrl:VacCanEnvC4',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
-         )
-
-
-register(
-         id='VacCanTest-v0',
-         entry_point='gym.envs.temp_ctrl:VacCanTestEnv',
-         max_episode_steps=10000,
-         reward_threshold=10000.0,
-         )
 
 
 # Algorithmic
