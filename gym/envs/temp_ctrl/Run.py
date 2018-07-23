@@ -72,6 +72,11 @@ class TempCtrlEnvs(gym.Env):
         self.elapsed_steps = 0
         return np.array(self.state)
 
+    # todo: this is hardcoded here, reimplement external Model.py import
+    def vac_can(self, T, t_inst):
+            dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C)+self.P_heat/(self.m*self.C)
+            return dTdt
+
     def step(self, action):
         assert self.action_space.contains(action), \
                 "%r (%s) invalid" % (action, type(action))
@@ -98,5 +103,5 @@ class TempCtrlEnvs(gym.Env):
             reward = 0.1
         else:
             reward = 0.
-        
+
         return self.state, reward, done, {}
