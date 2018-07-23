@@ -35,6 +35,7 @@ class TempCtrlEnvs(gym.Env):
         else:
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
+
         self.t_step = 0.1  # seconds between state updates
 
         if timestep_size[0] is 't':
@@ -57,7 +58,8 @@ class TempCtrlEnvs(gym.Env):
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
-
+        # initial seed and reset of env
+        self.elapsed_steps = 0
         self.seed()
         self.reset()
 
@@ -69,7 +71,6 @@ class TempCtrlEnvs(gym.Env):
     def reset(self):
         self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
         self.steps_beyond_done = None
-        self.elapsed_steps = 0
         return np.array(self.state)
 
     # todo: this is hardcoded here, reimplement external Model.py import
