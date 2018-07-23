@@ -102,6 +102,7 @@ class TempCtrlEnvs(gym.Env):
 
         # todo: hard codeing reward, need to refactor rewards as class
         #reward = Models.Rewar
+        T_setpoint = 45
         if not done:
             if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
                 reward = 0.1
