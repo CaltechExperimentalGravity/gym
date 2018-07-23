@@ -85,6 +85,8 @@ class TempCtrlEnvs(gym.Env):
         T_can = self.state[0]
         self.P_heat = action
 
+        # todo: do you really need to allocate on each step here? Can just do
+        # in __init__?
         self.t = np.arange(0, self.t_max, self.t_step)
 
         #  gets final value after integration
@@ -99,9 +101,10 @@ class TempCtrlEnvs(gym.Env):
 
         # todo: hard codeing reward, need to refactor rewards as class
         #reward = Models.Rewar
-        if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
-            reward = 0.1
-        else:
-            reward = 0.
+        if not done:
+            if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
+                reward = 0.1
+            else:
+                reward = 0.
 
         return self.state, reward, done, {}
