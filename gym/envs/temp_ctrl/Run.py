@@ -38,7 +38,7 @@ class TempCtrlEnvs(gym.Env):
         self.t_step = 0.1  # seconds between state updates
         self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
 
-        # configure discreet or continuous action space
+        # configure discreet or cont action space or throw error of unknown
         if act_space in ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']:
             sizeActionSpace = int(act_space[1:])  # conv to useable number
             self.action_space = spaces.Discrete(float(sizeActionSpace))
@@ -48,7 +48,7 @@ class TempCtrlEnvs(gym.Env):
                                            dtype=np.float64)
         else:
             raise ValueError('Error: unknown act_space specifier.')
-            
+
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
@@ -82,3 +82,8 @@ class TempCtrlEnvs(gym.Env):
         reward = Models.Rewar
 
         return self.state, reward, done, {}
+
+    def reset():
+        state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
+        self.steps_beyond_done = None
+        return np.array(self.state)
