@@ -54,8 +54,6 @@ class TempCtrlEnvs(gym.Env):
                                             dtype=np.float64)
 
         self.seed()
-        self.steps_beyond_done = None
-        self.elapsed_steps = 0
         self.reset()
 
 
@@ -83,7 +81,14 @@ class TempCtrlEnvs(gym.Env):
 
         return self.state, reward, done, {}
 
-    def reset():
-        state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
+# Sets seed for random number generator used in the environment
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
+
+
+    def reset(self):
+        self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
         self.steps_beyond_done = None
+        self.elapsed_steps = 0
         return np.array(self.state)
