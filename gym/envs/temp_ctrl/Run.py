@@ -61,6 +61,16 @@ class TempCtrlEnvs(gym.Env):
         self.seed()
         self.reset()
 
+    # Sets seed for random number generator used in the environment
+    def seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
+
+    def reset(self):
+        self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
+        self.steps_beyond_done = None
+        self.elapsed_steps = 0
+        return np.array(self.state)
 
     def step(self, action):
         assert self.action_space.contains(action), \
@@ -79,20 +89,14 @@ class TempCtrlEnvs(gym.Env):
         self.state = np.array([T_can_updated,
                                self.T_amb(self.elapsed_steps*10.)])
 
-        done = T_can_updated < 15. or T_can_updated > 60.
+        done = T_can_updated < 15. or T_can_updated > 60. # kill run if railed
         done = bool(done)
 
-        reward = Models.Rewar
-
+        # todo: hard codeing reward, need to refactor rewards as class
+        #reward = Models.Rewar
+        if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
+            reward = 0.1
+        else:
+            reward = 0.
+        
         return self.state, reward, done, {}
-
-# Sets seed for random number generator used in the environment
-    def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
-
-    def reset(self):
-        self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
-        self.steps_beyond_done = None
-        self.elapsed_steps = 0
-        return np.array(self.state)
