@@ -29,10 +29,13 @@ class TempCtrlEnvs(gym.Env):
 '''        if kwargs is None:
             kwargs.update({'param':'Vaccan', 'act_space':'D200', 'reward_type':'Rexp', 'ambtemp_models':'Tsin', 'timestep_size':'t10'})'''
 
-        if kwargs['param']=='Vaccan':
+        if thermalParam == 'Vaccan':
             self.k, self.m, self.C, self.A, self.d = Models.VacCanParams()
-        else:
+        elif thermalParam == 'Seism':
             self.k, self.m, self.C, self.A, self.d = Models.SeismParams()
+        else:
+            raise ValueError(
+                'Thermal parameter specifier not in known list of systems.')
         self.t_step = 0.1  # seconds between state updates
         self.t_max = kwargs['timestep_size']  # 10 seconds = 1 time-step
 
