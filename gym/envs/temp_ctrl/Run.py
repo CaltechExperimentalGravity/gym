@@ -36,7 +36,12 @@ class TempCtrlEnvs(gym.Env):
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
         self.t_step = 0.1  # seconds between state updates
-        self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
+
+        if timestep_size[0] is 't':
+            self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
+        else:
+            raise ValueError(
+                'Error: timestep_size must start with t, specifier bad')
 
         # configure discreet or cont action space or throw error of unknown
         if act_space in ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']:
@@ -85,7 +90,6 @@ class TempCtrlEnvs(gym.Env):
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
-
 
     def reset(self):
         self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
