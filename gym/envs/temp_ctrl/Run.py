@@ -20,9 +20,14 @@ class TempCtrlEnvs(gym.Env):
         'render.modes':['human', 'rgb_array']
     }
 
-    def __init__(self, **kwargs):
-        if kwargs is None:
-            kwargs.update({'param':'Vaccan', 'act_space':'D200', 'reward_type':'Rexp', 'ambtemp_models':'Tsin', 'timestep_size':'t10'})
+    def __init__(self,
+                 thermalParam='Vaccan',
+                 act_space='D200',
+                 reward_type='Rexp',
+                 ambtemp_models='Tsin',
+                 'timestep_size'='t10'):
+'''        if kwargs is None:
+            kwargs.update({'param':'Vaccan', 'act_space':'D200', 'reward_type':'Rexp', 'ambtemp_models':'Tsin', 'timestep_size':'t10'})'''
 
         if kwargs['param']=='Vaccan':
             self.k, self.m, self.C, self.A, self.d = Models.VacCanParams()
