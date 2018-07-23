@@ -49,10 +49,6 @@ class TempCtrlEnvs(gym.Env):
         else:
             raise ValueError('Error: unknown act_space specifier.')
             
-        '''self.action_space = {
-        'D10':
-        'C': spaces.Box(np.array([0.]), np.array([100.]), dtype=np.float64)
-        }[kwargs['act_space']]'''
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
