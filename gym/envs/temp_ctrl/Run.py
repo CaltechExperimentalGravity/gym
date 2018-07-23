@@ -37,7 +37,7 @@ class TempCtrlEnvs(gym.Env):
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
         self.t_step = 0.1  # seconds between state updates
-        self.t_max = kwargs['timestep_size']  # 10 seconds = 1 time-step
+        self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
 
 
         self.action_space = {
