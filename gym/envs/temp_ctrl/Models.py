@@ -21,7 +21,7 @@ def SeismParams(): #!!!!!! Change based on Kira's elogs
     d = 5.08e-2   # Thickness of foam
 
 
-            ###### Heat conduction equation ######
+#            ###### Heat conduction equation ######
 def ModelEquation(self, T, t_inst):
 
     dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) \
