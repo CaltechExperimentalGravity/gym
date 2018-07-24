@@ -6,19 +6,24 @@ import numpy as np
 from scipy.integrate import odeint
 
                 ##### Parameters in model for thermal dynamics #####
-def VacCanParams():
-    k = 1.136*25e-3   # Thermal conductivity constant of foam
-    m = 15.76   # Mass of vacuum can
-    C = 505    # Specific heat capacity of vac can
-    A = 1.3   # Cross-sectional area normal to conduction
-    d = 5.08e-2   # Thickness of foam
 
-def SeismParams(): #!!!!!! Change based on Kira's elogs
-    k = 1.136*25e-3   # Thermal conductivity constant of foam
-    m = 15.76   # Mass of vacuum can
-    C = 505    # Specific heat capacity of vac can
-    A = 1.3   # Cross-sectional area normal to conduction
-    d = 5.08e-2   # Thickness of foam
+
+class sysParam():
+    def VacCanParams():
+        k = 1.136*25e-3   # Thermal conductivity constant of foam
+        m = 15.76   # Mass of vacuum can
+        C = 505    # Specific heat capacity of vac can
+        A = 1.3   # Cross-sectional area normal to conduction
+        d = 5.08e-2   # Thickness of foam
+        return k, m, C, A, d
+
+    def SeismParams(): #!!!!!! Change based on Kira's elogs
+        k = 1.136*25e-3   # Thermal conductivity constant of foam
+        m = 15.76   # Mass of vacuum can
+        C = 505    # Specific heat capacity of vac can
+        A = 1.3   # Cross-sectional area normal to conduction
+        d = 5.08e-2   # Thickness of foam
+        return k, m, C, A, d
 
 
 #            ###### Heat conduction equation ######

@@ -6,8 +6,8 @@ from gym.utils import seeding
 import numpy as np
 from scipy.integrate import odeint
 
-#import gym.envs.temp_ctrl.Models as Models
-#import models
+from gym.envs.temp_ctrl.Models import sysParam as sysParam
+# import Models as Models
 
 '''param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
@@ -29,9 +29,15 @@ class TempCtrlEnvs(gym.Env):
 
         #  Configure system thermal params or throw error if unknown
         if thermalParam == 'Vaccan':
-            self.k, self.m, self.C, self.A, self.d = Models.VacCanParams()
+#            self.k = 1.136*25.e-3
+#            self.m = 15.76
+#            self.C = 505
+#            self.A = 1.3
+#            self.d = 5.08e-2
+
+            self.k, self.m, self.C, self.A, self.d = sysParam.VacCanParams()
         elif thermalParam == 'Seism':
-            self.k, self.m, self.C, self.A, self.d = Models.SeismParams()
+            self.k, self.m, self.C, self.A, self.d = sysParam.SeismParams()
         else:
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
@@ -69,7 +75,7 @@ class TempCtrlEnvs(gym.Env):
         return [seed]
 
     def reset(self):
-        self.state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
+        self.state = [self.np_random.uniform(low=15, high=30), self.T_amb(0)]
         self.steps_beyond_done = None
         return np.array(self.state)
 
@@ -77,6 +83,12 @@ class TempCtrlEnvs(gym.Env):
     def vac_can(self, T, t_inst):
             dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C)+self.P_heat/(self.m*self.C)
             return dTdt
+
+    # todo: this is hardcoded in for now until decorator is written
+    def T_amb(self, time):
+        """Returns ambient temperature oscillating around 20 C with an
+           amplitude of 5 C, depending on number of steps elapsed. """
+        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
 
     def step(self, action):
         assert self.action_space.contains(action), \

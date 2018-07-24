@@ -20,6 +20,17 @@ for p in param:
                         entry_point='gym.envs.temp_ctrl:TempCtrlEnvs'
                         #entry_point='gym.envs.temp_ctrl:TempCtrlEnvs(param={}, act_space={}, reward_type={} ambtemp_models={}, timestep_size={})'.format(p,a,r,ta,ts),
                     )"""
+
+register(
+    id='VacCan-parametric-v0',
+    entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
+    kwargs={'thermalParam': 'Vaccan',
+            'act_space': 'D200',
+            'reward_type': 'Rexp',
+            'ambtemp_models': 'Tsin',
+            'timestep_size': 't10'}
+)
+
 # Custom Environment(s) for Temperature Control
 # ----------------------------------------------------
 # Vacuum Can
