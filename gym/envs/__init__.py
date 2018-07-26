@@ -3,7 +3,7 @@ from gym.envs.registration import registry, register, make, spec
 # Custom Environment(s) for Temperature Control
 # ----------------------------------------------------
 
-"""param = ['Vaccan', 'Seism']
+param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
 reward_type = ['Rw10', 'Rw4', 'Rquad', 'Rexp']
 ambtemp_models = ['Tcon', 'Tsin', 'Trand', 'Tsinrand']
@@ -17,9 +17,13 @@ for p in param:
                 for ts in timestep_size:
                     register(
                         id='{}_{}_{}_{}_{}-v0'.format(p,a,r,ta,ts),
-                        entry_point='gym.envs.temp_ctrl:TempCtrlEnvs'
-                        #entry_point='gym.envs.temp_ctrl:TempCtrlEnvs(param={}, act_space={}, reward_type={} ambtemp_models={}, timestep_size={})'.format(p,a,r,ta,ts),
-                    )"""
+                        entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
+                        kwargs={'thermalParam': p,
+                                'act_space': a,
+                                'reward_type': r,
+                                'ambtemp_models': ta,
+                                'timestep_size': ts},
+                    )
 
 register(
     id='VacCan-parametric-v0',

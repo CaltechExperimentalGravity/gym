@@ -51,7 +51,7 @@ class TempCtrlEnvs(gym.Env):
                 'Error: timestep_size must start with t, specifier bad')
 
         # configure discreet or cont action space or throw error of unknown
-        if act_space in ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']:
+        if act_space in ['D10', 'D20', 'D50', 'D100', 'D200', 'D500']:
             sizeActionSpace = int(act_space[1:])  # conv to useable number
             self.action_space = spaces.Discrete(float(sizeActionSpace))
         elif act_space is 'C':
