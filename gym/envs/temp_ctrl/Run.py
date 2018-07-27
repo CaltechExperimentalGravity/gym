@@ -7,7 +7,6 @@ import numpy as np
 from scipy.integrate import odeint
 
 from gym.envs.temp_ctrl.Models import sysParam as sysParam
-# import Models as Models
 
 '''param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
@@ -29,12 +28,6 @@ class TempCtrlEnvs(gym.Env):
 
         #  Configure system thermal params or throw error if unknown
         if thermalParam == 'Vaccan':
-#            self.k = 1.136*25.e-3
-#            self.m = 15.76
-#            self.C = 505
-#            self.A = 1.3
-#            self.d = 5.08e-2
-
             self.k, self.m, self.C, self.A, self.d = sysParam.VacCanParams()
         elif thermalParam == 'Seism':
             self.k, self.m, self.C, self.A, self.d = sysParam.SeismParams()
@@ -42,7 +35,7 @@ class TempCtrlEnvs(gym.Env):
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
 
-        self.t_step = 0.1  # seconds between state updates
+        self.t_step = 0.1  # seconds integration steps
 
         if timestep_size[0] is 't':
             self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
@@ -55,7 +48,7 @@ class TempCtrlEnvs(gym.Env):
             sizeActionSpace = int(act_space[1:])  # conv to useable number
             self.action_space = spaces.Discrete(float(sizeActionSpace))
         elif act_space is 'C':
-            self.action_space = spaces.Box(np.array([0.]),
+            self.action_space = spaces.Box(np.array([0.]),  # todo: set range
                                            np.array([100.]),
                                            dtype=np.float64)
         else:
@@ -98,8 +91,7 @@ class TempCtrlEnvs(gym.Env):
         T_can = self.state[0]
         self.P_heat = action
 
-        # todo: do you really need to allocate on each step here? Can just do
-        # in __init__?
+        # todo: need to allocate on each step here? Can just do __init__?
         self.t = np.arange(0, self.t_max, self.t_step)
 
         #  gets final value after integration
@@ -113,7 +105,6 @@ class TempCtrlEnvs(gym.Env):
         done = bool(done)
 
         # todo: hard codeing reward, need to refactor rewards as class
-        #reward = Models.Rewar
         T_setpoint = 45
         if not done:
             if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
