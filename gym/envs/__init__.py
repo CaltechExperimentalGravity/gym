@@ -25,15 +25,15 @@ for p in param:
                                 'timestep_size': ts},
                     )
 
-register(
-    id='VacCan-parametric-v0',
-    entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
-    kwargs={'thermalParam': 'Vaccan',
-            'act_space': 'D200',
-            'reward_type': 'Rexp',
-            'ambtemp_models': 'Tsin',
-            'timestep_size': 't10'}
-)
+# register(
+#     id='VacCan-parametric-v0',
+#     entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
+#     kwargs={'thermalParam': 'Vaccan',
+#             'act_space': 'D200',
+#             'reward_type': 'Rexp',
+#             'ambtemp_models': 'Tsin',
+#             'timestep_size': 't10'}
+# )
 
 # Custom Environment(s) for Temperature Control
 # ----------------------------------------------------
