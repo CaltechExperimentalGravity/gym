@@ -146,6 +146,37 @@ specification of each task is in `gym/envs/__init__.py
 <https://github.com/openai/gym/blob/master/gym/envs/__init__.py>`_. It's
 worth browsing through both.
 
+Temperature Control
+-------------------
+These are different envs for thermal systems with different parameters for training RL algorithms for accurate temperature control.
+
+The attributes of the environment that can be varied are:
+1. <thermal_param> The set of thermal parameters for testing: 'Vaccan' or 'Seism' referring to the vacuum can thermal system or the seismometer thermal system.
+
+2. <act_space> Size and nature of the action space, which can be discrete with various sizes dividing up the interval between 0 and 100 W: 'D10', 'D20', 'D50', 'D100', 'D200', 'D500';
+or continuous between 0 and 100 W: 'C' .
+
+3. <reward_type> Type of reward function, which include windows of size 10 C and 4 C: 'Rw10', 'Rw4';
+quadratic: 'Rquad';
+exponential: 'Rexp'
+
+4. <ambtemp_models> Model for ambient temperature, which can be constant, random, sinusoidal, or noisy sinusoidal: 'Tcon', 'Trand', 'Tsin', 'Tsinrand'
+
+5. <timestep_size> Size of each time step in the game in seconds: 't1', 't10', 't30', 't60', 't100'
+,
+  Format: env = gym.make('<thermal_param>_<act_space>_<reward_type>_<ambtemp_models>_<timestep_size>-v0')
+  
+Example:
+
+.. code:: python
+
+    import gym
+    env = gym.make('Vaccan_D50_Rw4_Tsin_t30-v0')
+    env.reset()
+
+
+
+
 Algorithmic
 -----------
 
