@@ -1,16 +1,16 @@
 from gym.envs.registration import registry, register, make, spec
 
-# Custom Environment(s) for Temperature Control
+# Custom Environment for Temperature Control
 # ----------------------------------------------------
 
-param = ['Vaccan', 'Seism']
+thermal_param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
 reward_type = ['Rw10', 'Rw4', 'Rquad', 'Rexp']
 ambtemp_models = ['Tcon', 'Tsin', 'Trand', 'Tsinrand']
 timestep_size = ['t1', 't10', 't30', 't60', 't100']
 
 
-for p in param:
+for p in thermal_param:
     for a in act_space:
         for r in reward_type:
             for ta in ambtemp_models:
@@ -25,7 +25,7 @@ for p in param:
                                 'timestep_size': ts},
                     )
 
-register(
+"""register(
     id='VacCan-parametric-v0',
     entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
     kwargs={'thermalParam': 'Vaccan',
@@ -33,60 +33,20 @@ register(
             'reward_type': 'Rexp',
             'ambtemp_models': 'Tsin',
             'timestep_size': 't10'}
-)
+)"""
 
-# Custom Environment(s) for Temperature Control
+
 # ----------------------------------------------------
-# Vacuum Can
+# Basic Vacuum Can
 register(
     id='VacCan-v0',
-    entry_point='gym.envs.temp_ctrl:VacCanEnv0',
-
+    entry_point='gym.envs.temp_ctrl:VacCanEnvDiscrete',
 )
 
-register(
-         id='VacCan-v1',
-         entry_point='gym.envs.temp_ctrl:VacCanEnv1',
-
-         )
-
-register(
-         id='VacCan-v2',
-         entry_point='gym.envs.temp_ctrl:VacCanEnv2',
-
-         )
-
-register(
-         id='VacCan-v3',
-         entry_point='gym.envs.temp_ctrl:VacCanEnv3',
-
-         )
-
-register(
-         id='VacCan-v4',
-         entry_point='gym.envs.temp_ctrl:VacCanEnv4',
-
-         )
-
-# Vacuum Can
 register(
          id='VacCanC-v0',
-         entry_point='gym.envs.temp_ctrl:VacCanEnvC0',
-
-)
-
-register(
-         id='VacCanC-v1',
-         entry_point='gym.envs.temp_ctrl:VacCanEnvC1',
-
+         entry_point='gym.envs.temp_ctrl:VacCanEnvContinuous',
          )
-
-register(
-         id='VacCanC-v2',
-         entry_point='gym.envs.temp_ctrl:VacCanEnvC2',
-
-         )
-
 
 
 # Algorithmic
