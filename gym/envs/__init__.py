@@ -21,11 +21,12 @@ for p in thermal_param:
                         kwargs={'thermalParam': p,
                                 'act_space': a,
                                 'reward_type': r,
-                                'ambtemp_models': ta,
+                                'ambtemp_model': ta,
                                 'timestep_size': ts},
                     )
 
-<<<<<<< HEAD
+
+
 """register(
     id='VacCan-parametric-v0',
     entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
@@ -35,28 +36,6 @@ for p in thermal_param:
             'ambtemp_models': 'Tsin',
             'timestep_size': 't10'}
 )"""
-
-||||||| merged common ancestors
-register(
-    id='VacCan-parametric-v0',
-    entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
-    kwargs={'thermalParam': 'Vaccan',
-            'act_space': 'D200',
-            'reward_type': 'Rexp',
-            'ambtemp_models': 'Tsin',
-            'timestep_size': 't10'}
-)
-=======
-# register(
-#     id='VacCan-parametric-v0',
-#     entry_point='gym.envs.temp_ctrl:TempCtrlEnvs',
-#     kwargs={'thermalParam': 'Vaccan',
-#             'act_space': 'D200',
-#             'reward_type': 'Rexp',
-#             'ambtemp_models': 'Tsin',
-#             'timestep_size': 't10'}
-# )
->>>>>>> f46749718ade85c3211229461ac5afc5df005610
 
 # ----------------------------------------------------
 # Basic Vacuum Can
