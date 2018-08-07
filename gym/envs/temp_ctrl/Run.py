@@ -6,7 +6,7 @@ from gym.utils import seeding
 import numpy as np
 from scipy.integrate import odeint
 
-from gym.envs.temp_ctrl.Models import sysParam, TambModels
+from gym.envs.temp_ctrl.Models import sysParam, TambModels, rewardType
 
 '''param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
@@ -36,7 +36,7 @@ class TempCtrlEnvs(gym.Env):
                 'Thermal parameter specifier not in known list of systems.')
 
 
-        # Initialise model for ambient temperature
+        # Model for ambient temperature
         self.ambtemp_model = ambtemp_model
 
 
@@ -52,8 +52,8 @@ class TempCtrlEnvs(gym.Env):
             raise ValueError('Error: unknown act_space specifier.')
 
 
-        # Configure reward function or throw error if unknown
-
+        # Reward function
+        self.reward_type = reward_type
 
 
         # Configure time-step size or throw error if unknown
@@ -131,9 +131,17 @@ class TempCtrlEnvs(gym.Env):
         # todo: hard codeing reward, need to refactor rewards as class
         T_setpoint = 45
         if not done:
-            if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
-                reward = 0.1
+            if self.reward_type is 'Rw10':
+                reward = rewardType.RewardWindow10(T_can_updated,T_setpoint)
+            elif self.reward_type is 'Rw4':
+                reward = rewardType.RewardWindow4(T_can_updated, T_setpoint)
+            elif self.reward_type is 'Rexp':
+                reward = rewardType.RewardExp(T_can_updated, T_setpoint)
+            elif self.reward_type is 'Rquad':
+                reward = rewardType.RewardQuadratic(T_can_updated, T_setpoint)
+            elif self.reward_type is 'Rrecquad':
+                reward = rewardType.RewardReciprocalQuadratic(T_can_updated, T_setpoint)
             else:
-                reward = 0.
+                raise ValueError('Error: unknown reward function')
 
         return self.state, reward, done, {}

@@ -45,39 +45,37 @@ class TambModels():
 
     return amplitude*np.sin(2*np.pi*elapsed_steps*timestep + time)/(time_period*3600)/2 + np.random.random()*amplitude/2 + Tamb_standard
 
+
+
+            ###### Reward functions ######
+class rewardType():
+    def RewardWindow10(T_can_updated, T_setpoint):
+        if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
+            reward = 0.1
+        else:
+            reward = 0.
+        return reward
+
+    def RewardWindow4(T_can_updated, T_setpoint):
+        if T_can_updated > T_setpoint-2. and T_can_updated <= T_setpoint+2.:
+            reward = 0.1
+        else:
+            reward = 0.
+        return reward
+
+    def RewardExp(T_can_updated, T_setpoint):
+        return 0.1*np.exp(-(T_can_updated-T_setpoint)**2/(2*T_setpoint))
+
+    def RewardQuadratic(T_can_updated, T_setpoint):
+        return 0.1*(1. - (T_can_updated - T_setpoint)**2/T_setpoint**2)
+
+    def RewardReciprocalQuadratic(T_can_updated, T_setpoint):
+        return 0.1/((T_can_updated - T_setpoint)**2/T_setpoint**2)
+
+
 #            ###### Heat conduction equation ######
 def ModelEquation(self, T, t_inst):
 
     dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C) \
            + self.P_heat/(self.m*self.C)
     return dTdt
-
-
-
-            ###### Reward functions ######
-def RewardWindow10(T_can_updated, T_setpoint):
-    if T_can_updated > T_setpoint-5. and T_can_updated <= T_setpoint+5.:
-        reward = 0.1
-    else:
-        reward = 0.
-    return reward
-
-def RewardWindow4(T_can_updated):
-    if T_can_updated > T_setpoint-2. and T_can_updated <= T_setpoint+2.:
-        reward = 0.1
-    else:
-        reward = 0.
-    return reward
-
-def RewardExp(T_can_updated, T_setpoint):
-    return np.exp(-(T_can_updated-T_setpoint)**2/(2*T_setpoint))
-
-def RewardQuadratic(T_can_updated, T_setpoint):
-    return 1. - (T_can_updated - T_setpoint)**2/T_setpoint**2
-
-
-        ###### Reset state ######
-def reset():
-    state = [np_random.uniform(low=15, high=30), self.T_amb(0)]
-    self.steps_beyond_done = None
-    return np.array(self.state)
