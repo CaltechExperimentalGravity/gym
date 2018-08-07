@@ -99,7 +99,7 @@ class TempCtrlEnvs(gym.Env):
         """Returns ambient temperature based on ambient temperature model defined in the specific environment """
         if self.ambtemp_model is 'Tcon':
             return TambModels.TConstant()
-        elif self.ambtemp_model is 'Tsine':
+        elif self.ambtemp_model is 'Tsin':
             return TambModels.TSine(self.elapsed_steps, time, self.timestep)
         elif self.ambtemp_model is 'Trand':
             return TambModels.TRandom()
@@ -122,11 +122,10 @@ class TempCtrlEnvs(gym.Env):
             self.vac_can, T_can, self.t)[int(self.timestep/self.t_int_step) - 1])
 
         self.state = np.array([T_can_updated,
-                               self.T_amb(self.elapsed_steps*10.)])
+                               self.T_amb(self.elapsed_steps*self.timestep)])
 
-        if not self.observation_space.contains(T_can_updated):
-            done = True # kill run if railed
-        done = bool(done)
+        done =  not self.observation_space.contains(self.state)
+        done = bool(done)   # kill run if railed
 
         # todo: hard codeing reward, need to refactor rewards as class
         T_setpoint = 45

@@ -23,27 +23,28 @@ class sysParam():
         d = 5.08e-2   # Thickness of foam
         return k, m, C, A, d
 
+
                 ###### Ambient temperature models #####
+Tamb_standard = 20.
 class TambModels():
-    Tamb_standard = 20.
 
     def TConstant():
-    return Tamb_standard
+        return Tamb_standard
 
     def TRandom():
-    return np.random.random()*5. + Tamb_standard
+        return np.random.random()*5. + Tamb_standard
 
     def TSine(elapsed_steps, time, timestep):
-    time_period = 24. # hours
-    amplitude = 5. # degrees Celsius
+        time_period = 24. # hours
+        amplitude = 5. # degrees Celsius
 
-    return amplitude*np.sin(2*np.pi*elapsed_steps*timestep + time)/(time_period*3600) + Tamb_standard
+        return amplitude*np.sin(2*np.pi*elapsed_steps*timestep + time)/(time_period*3600) + Tamb_standard
 
     def TSineRandom(elapsed_steps, time, timestep):
-    time_period = 24. # hours
-    amplitude = 5. # degrees Celsius
+        time_period = 24. # hours
+        amplitude = 5. # degrees Celsius
 
-    return amplitude*np.sin(2*np.pi*elapsed_steps*timestep + time)/(time_period*3600)/2 + np.random.random()*amplitude/2 + Tamb_standard
+        return amplitude*np.sin(2*np.pi*elapsed_steps*timestep + time)/(time_period*3600)/2 + np.random.random()*amplitude/2 + Tamb_standard
 
 
 
