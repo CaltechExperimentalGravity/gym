@@ -6,7 +6,7 @@ from gym.utils import seeding
 import numpy as np
 from scipy.integrate import odeint
 
-from gym.envs.temp_ctrl.Models import sysParam as sysParam
+from gym.envs.temp_ctrl.Models import sysParam, TambModels
 
 '''param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
@@ -23,7 +23,7 @@ class TempCtrlEnvs(gym.Env):
                  thermalParam='Vaccan',
                  act_space='D200',
                  reward_type='Rexp',
-                 ambtemp_models='Tsin',
+                 ambtemp_model='Tsin',
                  timestep_size='t10'):
 
         #  Configure system thermal params or throw error if unknown
@@ -35,15 +35,12 @@ class TempCtrlEnvs(gym.Env):
             raise ValueError(
                 'Thermal parameter specifier not in known list of systems.')
 
-        self.t_step = 0.1  # seconds integration steps
 
-        if timestep_size[0] is 't':
-            self.t_max = int(timestep_size[1:])  # 10 seconds = 1 time-step
-        else:
-            raise ValueError(
-                'Error: timestep_size must start with t, specifier bad')
+        # Initialise model for ambient temperature
+        self.ambtemp_model = ambtemp_model
 
-        # configure discreet or cont action space or throw error of unknown
+
+        # Configure action space or throw error if unknown
         if act_space in ['D10', 'D20', 'D50', 'D100', 'D200', 'D500']:
             sizeActionSpace = int(act_space[1:])  # conv to useable number
             self.action_space = spaces.Discrete(float(sizeActionSpace))
@@ -54,9 +51,29 @@ class TempCtrlEnvs(gym.Env):
         else:
             raise ValueError('Error: unknown act_space specifier.')
 
+
+        # Configure reward function or throw error if unknown
+
+
+
+        # Configure time-step size or throw error if unknown
+        if timestep_size[0] is 't':
+            self.timestep = int(timestep_size[1:])  # Defines the number of seconds in one time-step
+
+        else:
+            raise ValueError(
+                'Error: timestep_size must start with t, specifier bad')
+
+        self.t_int_step = 0.1  # seconds between integration steps
+        self.t = np.arange(0, self.timestep, self.t_int_step) # time array for odeint
+
+
+        # Configure observation space : T_can: [15,90]C; T_amb: [0,50]C
         self.observation_space = spaces.Box(np.array([15.0, 0.0]),
                                             np.array([60.0, 50.0]),
                                             dtype=np.float64)
+
+
         # initial seed and reset of env
         self.elapsed_steps = 0
         self.seed()
@@ -77,11 +94,20 @@ class TempCtrlEnvs(gym.Env):
             dTdt = -self.k*self.A*(T-self.T_amb(t_inst))/(self.d*self.m*self.C)+self.P_heat/(self.m*self.C)
             return dTdt
 
-    # todo: this is hardcoded in for now until decorator is written
+    # Configure ambient temperature model or raise error if model is unknown
     def T_amb(self, time):
-        """Returns ambient temperature oscillating around 20 C with an
-           amplitude of 5 C, depending on number of steps elapsed. """
-        return 5*np.sin(2*np.pi*(self.elapsed_steps*10. + time)/(6*3600)) + 20.
+        """Returns ambient temperature based on ambient temperature model defined in the specific environment """
+        if ambtemp_model is 'Tcon':
+            return TambModels.TConstant()
+        elif ambtemp_model is 'Tsine':
+            return TambModels.TSine(self.elapsed_steps, time, self.timestep)
+        elif ambtemp_model is 'Trand':
+            return TambModels.TRandom()
+        elif ambtemp_model is 'Tsinrand':
+            return TambModels.TSineRandom(self.elapsed_steps, time, self.timestep)
+        else:
+            raise ValueError('Error: unknown ambient temperature model')
+
 
     def step(self, action):
         assert self.action_space.contains(action), \
@@ -90,9 +116,6 @@ class TempCtrlEnvs(gym.Env):
         self.elapsed_steps += 1
         T_can = self.state[0]
         self.P_heat = action
-
-        # todo: need to allocate on each step here? Can just do __init__?
-        self.t = np.arange(0, self.t_max, self.t_step)
 
         #  gets final value after integration
         T_can_updated = float(odeint(
