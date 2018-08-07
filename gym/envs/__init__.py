@@ -6,14 +6,14 @@ from gym.envs.registration import registry, register, make, spec
 thermal_param = ['Vaccan', 'Seism']
 act_space = ['D10', 'D20', 'D50', 'D100', 'D200', 'D500', 'C']
 reward_type = ['Rw10', 'Rw4', 'Rquad', 'Rexp']
-ambtemp_models = ['Tcon', 'Tsin', 'Trand', 'Tsinrand']
+ambtemp_model = ['Tcon', 'Tsin', 'Trand', 'Tsinrand']
 timestep_size = ['t1', 't10', 't30', 't60', 't100']
 
 
 for p in thermal_param:
     for a in act_space:
         for r in reward_type:
-            for ta in ambtemp_models:
+            for ta in ambtemp_model:
                 for ts in timestep_size:
                     register(
                         id='{}_{}_{}_{}_{}-v0'.format(p,a,r,ta,ts),
