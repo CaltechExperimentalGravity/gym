@@ -97,13 +97,13 @@ class TempCtrlEnvs(gym.Env):
     # Configure ambient temperature model or raise error if model is unknown
     def T_amb(self, time):
         """Returns ambient temperature based on ambient temperature model defined in the specific environment """
-        if ambtemp_model is 'Tcon':
+        if self.ambtemp_model is 'Tcon':
             return TambModels.TConstant()
-        elif ambtemp_model is 'Tsine':
+        elif self.ambtemp_model is 'Tsine':
             return TambModels.TSine(self.elapsed_steps, time, self.timestep)
-        elif ambtemp_model is 'Trand':
+        elif self.ambtemp_model is 'Trand':
             return TambModels.TRandom()
-        elif ambtemp_model is 'Tsinrand':
+        elif self.ambtemp_model is 'Tsinrand':
             return TambModels.TSineRandom(self.elapsed_steps, time, self.timestep)
         else:
             raise ValueError('Error: unknown ambient temperature model')
@@ -119,12 +119,13 @@ class TempCtrlEnvs(gym.Env):
 
         #  gets final value after integration
         T_can_updated = float(odeint(
-            self.vac_can, T_can, self.t)[int(self.t_max/self.t_step) - 1])
+            self.vac_can, T_can, self.t)[int(self.timestep/self.t_int_step) - 1])
 
         self.state = np.array([T_can_updated,
                                self.T_amb(self.elapsed_steps*10.)])
 
-        done = T_can_updated < 15. or T_can_updated > 60. # kill run if railed
+        if not self.observation_space.contains(T_can_updated):
+            done = True # kill run if railed
         done = bool(done)
 
         # todo: hard codeing reward, need to refactor rewards as class
