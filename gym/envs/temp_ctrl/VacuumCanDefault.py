@@ -119,7 +119,7 @@ class VacCanEnvDiscrete(gym.Env):
 #####################################################
 ################## Vac Can Continuous ###############
 #####################################################
-class VacCanEnvC0(gym.Env):
+class VacCanEnvContinuous(gym.Env):
     metadata = {
         'render.modes':['human']
     }
