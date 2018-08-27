@@ -142,5 +142,7 @@ class TempCtrlEnvs(gym.Env):
                 reward = rewardType.RewardReciprocalQuadratic(T_can_updated, T_setpoint)
             else:
                 raise ValueError('Error: unknown reward function')
+        else:
+            reward = 0
 
         return self.state, reward, done, {}
