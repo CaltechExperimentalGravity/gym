@@ -49,6 +49,9 @@ register(
          entry_point='gym.envs.temp_ctrl:VacCanEnvContinuous',
          )
 
+register(id='TempControl-v0', 
+    entry_point='gym_tempcontrol.envs:TempEnv', 
+)
 
 # Algorithmic
 # ----------------------------------------
