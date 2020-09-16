@@ -50,7 +50,7 @@ register(
          )
 
 register(id='TempControl-v0', 
-    entry_point='gym_tempcontrol.envs:TempEnv', 
+    entry_point='gym.envs.temp_ctrl:TempEnv', 
 )
 
 # Algorithmic
