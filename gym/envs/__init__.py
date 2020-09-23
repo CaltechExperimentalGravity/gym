@@ -144,6 +144,21 @@ register(
     max_episode_steps=500,
 )
 
+register(
+    id='VacCan-v0',
+    entry_point='gym.envs.classic_control:VacCanEnvDiscrete',
+)
+
+register(
+         id='VacCanC-v0',
+         entry_point='gym.envs.classic_control:VacCanEnvContinuous',
+         )
+
+register(
+id='TempControl-v0', 
+    entry_point='gym.envs.classic_control:TempEnv', 
+)
+
 # Box2d
 # ----------------------------------------
 
