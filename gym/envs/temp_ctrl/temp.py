@@ -64,9 +64,10 @@ class TempEnv(gym.Env):
         #Varying T_amb
         #dTdt = -self.k * A_foam / (m_ss * c_ss * h_foam) * (const.convert_temperature(T_amb(t),'Celsius','Kelvin') - T)
         print("Heating Power = {} W".format(self.P_in))
+        print(self.state[0])
         print('Temperature =  {:0.3f} C'.format(self.state[0]))
         # Constant T_amb
-        dTdt = -self.k*self.A/(self.m*self.c*self.d)*(T-self.T_amb(t_inst))+self.P_in/(self.m*self.c)
+        dTdt = -(self.k*self.A)/(self.m*self.c*self.d)*(T-self.T_amb(t_inst))+self.P_in/(self.m*self.c)
         return dTdt
 
     # generate ambient temperature
